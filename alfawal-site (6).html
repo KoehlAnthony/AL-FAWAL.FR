@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Al Fawal — Gastronomie Halal d'Exception</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=Raleway:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --vert:#1B4D35;--vert-fonce:#0D2318;--vert-mid:#163D2A;--vert-light:#245C40;
+  --rouge:#A8272A;--rouge-light:#C73335;
+  --or:#C9A84C;--or-light:#E8D197;--or-pale:rgba(201,168,76,0.08);
+  --blanc:#FAF8F3;--gris:#9A9288;--gris-clair:#C8C2B8;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--vert-fonce);color:var(--blanc);font-family:'Raleway',sans-serif;font-weight:300;overflow-x:hidden}
+
+/* ─── CURSEUR ─── */
+.cursor{width:6px;height:6px;background:var(--or);border-radius:50%;position:fixed;z-index:9999;pointer-events:none;transform:translate(-50%,-50%);transition:width .25s,height .25s,background .25s}
+.cursor-ring{width:32px;height:32px;border:1px solid rgba(201,168,76,.4);border-radius:50%;position:fixed;z-index:9998;pointer-events:none;transform:translate(-50%,-50%);transition:all .18s ease-out}
+.cursor.grow{width:10px;height:10px;background:var(--rouge)}
+.cursor-ring.grow{width:52px;height:52px;border-color:rgba(201,168,76,.7)}
+*{cursor:none}
+
+/* ─── NAV ─── */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.6rem 5rem;background:rgba(13,35,24,0);backdrop-filter:blur(0px);border-bottom:0.5px solid rgba(201,168,76,0);transition:all .5s ease}
+nav.scrolled{background:rgba(13,35,24,0.97);backdrop-filter:blur(16px);border-bottom-color:rgba(201,168,76,0.18)}
+.nav-logo{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:500;letter-spacing:0.18em;color:var(--or);text-decoration:none;display:flex;flex-direction:column;gap:2px}
+.nav-logo span{font-family:'Raleway',sans-serif;font-weight:300;color:var(--gris);font-size:0.55rem;letter-spacing:0.45em;text-transform:uppercase}
+.nav-links{display:flex;gap:3rem;list-style:none}
+.nav-links a{color:var(--gris-clair);text-decoration:none;font-size:0.68rem;letter-spacing:0.3em;text-transform:uppercase;font-weight:400;transition:color .3s;position:relative}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;background:var(--or);transform:scaleX(0);transform-origin:left;transition:transform .35s}
+.nav-links a:hover{color:var(--or)}
+.nav-links a:hover::after{transform:scaleX(1)}
+.nav-cta{font-size:0.65rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--or);border:1px solid rgba(201,168,76,.5);padding:0.7rem 1.8rem;text-decoration:none;font-weight:500;transition:all .35s;position:relative;overflow:hidden}
+.nav-cta::before{content:'';position:absolute;inset:0;background:var(--or);transform:scaleX(0);transform-origin:left;transition:transform .35s;z-index:-1}
+.nav-cta:hover{color:var(--vert-fonce)}
+.nav-cta:hover::before{transform:scaleX(1)}
+
+/* ─── HERO ─── */
+.hero{min-height:100vh;display:flex;align-items:center;position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;z-index:0}
+.hero-bg img{width:100%;height:100%;object-fit:cover;filter:brightness(0.18) saturate(0.5)}
+.hero-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(105deg,rgba(13,35,24,0.98) 40%,rgba(13,35,24,0.5) 75%,rgba(13,35,24,0.2) 100%)}
+.hero-content{position:relative;z-index:2;padding:0 5rem;max-width:740px}
+.hero-overline{display:flex;align-items:center;gap:1.2rem;margin-bottom:2.5rem;opacity:0;animation:fadeSlideUp .9s .3s forwards}
+.hero-overline-line{width:50px;height:1px;background:var(--or)}
+.hero-overline span{font-size:0.6rem;letter-spacing:0.55em;text-transform:uppercase;color:var(--or);font-weight:500}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(3.8rem,7vw,6.5rem);font-weight:400;line-height:1.02;letter-spacing:-0.01em;margin-bottom:1.8rem;opacity:0;animation:fadeSlideUp .9s .5s forwards}
+.hero h1 em{font-style:italic;color:var(--or)}
+.hero h1 strong{font-weight:700;display:block}
+.hero-desc{font-size:0.88rem;line-height:2;color:var(--gris-clair);max-width:480px;margin-bottom:3.5rem;opacity:0;animation:fadeSlideUp .9s .7s forwards;font-weight:300}
+.hero-actions{display:flex;align-items:center;gap:2.5rem;opacity:0;animation:fadeSlideUp .9s .9s forwards}
+.btn-or{background:var(--or);color:var(--vert-fonce);padding:1.1rem 2.8rem;font-size:0.65rem;letter-spacing:0.35em;text-transform:uppercase;text-decoration:none;font-weight:600;transition:all .3s;display:inline-block}
+.btn-or:hover{background:var(--or-light);transform:translateY(-2px)}
+.btn-txt{color:var(--gris-clair);font-size:0.65rem;letter-spacing:0.3em;text-transform:uppercase;text-decoration:none;display:flex;align-items:center;gap:.7rem;font-weight:400;transition:color .3s}
+.btn-txt::after{content:'→';transition:transform .3s}
+.btn-txt:hover{color:var(--blanc)}
+.btn-txt:hover::after{transform:translateX(5px)}
+.hero-scroll{position:absolute;bottom:3rem;right:5rem;display:flex;flex-direction:column;align-items:center;gap:.8rem;opacity:0;animation:fadeIn 1s 1.4s forwards}
+.hero-scroll span{font-size:0.55rem;letter-spacing:.45em;text-transform:uppercase;color:var(--gris);writing-mode:vertical-rl}
+.hero-scroll-line{width:1px;height:60px;background:linear-gradient(to bottom,var(--or),transparent);animation:lineDown 2s 1.5s infinite}
+
+/* ─── BANDEAU ─── */
+.bandeau{background:var(--rouge);padding:0.9rem 5rem;display:flex;align-items:center;justify-content:center;gap:4rem;overflow:hidden}
+.bandeau-inner{display:flex;align-items:center;gap:4rem;animation:scroll-x 20s linear infinite;white-space:nowrap}
+.bandeau-item{font-size:0.58rem;letter-spacing:0.35em;text-transform:uppercase;color:rgba(255,255,255,.9);display:flex;align-items:center;gap:1rem;flex-shrink:0}
+.bandeau-dot{width:3px;height:3px;background:var(--or);border-radius:50%;flex-shrink:0}
+
+/* ─── SECTIONS ─── */
+section{padding:8rem 5rem}
+.s-eyebrow{display:flex;align-items:center;gap:1rem;margin-bottom:1.2rem}
+.s-eyebrow-line{width:28px;height:1px;background:var(--or)}
+.s-eyebrow span{font-size:0.6rem;letter-spacing:.5em;text-transform:uppercase;color:var(--or);font-weight:500}
+h2{font-family:'Playfair Display',serif;font-size:clamp(2.4rem,4.5vw,4rem);font-weight:400;line-height:1.08;margin-bottom:1.8rem}
+h2 em{font-style:italic;color:var(--or)}
+.txt{font-size:0.85rem;line-height:2;color:var(--gris-clair);max-width:560px;font-weight:300}
+
+/* ─── HISTOIRE ─── */
+.story{background:var(--vert-mid);display:grid;grid-template-columns:1fr 1fr;gap:0;padding:0}
+.story-left{padding:8rem 5rem;display:flex;flex-direction:column;justify-content:center}
+.story-right{position:relative;background:var(--vert-fonce);display:flex;align-items:center;justify-content:center;overflow:hidden;min-height:650px}
+.story-grid-bg{position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,rgba(201,168,76,.03) 0,rgba(201,168,76,.03) 1px,transparent 1px,transparent 70px),repeating-linear-gradient(90deg,rgba(201,168,76,.03) 0,rgba(201,168,76,.03) 1px,transparent 1px,transparent 70px)}
+.story-emblem{position:relative;z-index:2;text-align:center;padding:3rem}
+.story-year-bg{font-family:'Playfair Display',serif;font-size:10rem;font-weight:700;color:var(--or);opacity:.04;line-height:1;display:block;margin-bottom:-3.5rem}
+.story-circle{width:210px;height:210px;border:1px solid rgba(201,168,76,.25);border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto;gap:.5rem;position:relative}
+.story-circle::before{content:'';position:absolute;inset:14px;border:1px solid rgba(201,168,76,.1);border-radius:50%}
+.story-circle-name{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:500;color:var(--or);letter-spacing:.15em}
+.story-circle-sub{font-size:.52rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gris);text-align:center;line-height:1.8}
+.story-tl{margin-top:3rem;display:flex;flex-direction:column}
+.tl-row{display:flex;gap:1.4rem;padding:.9rem 0;border-bottom:1px solid rgba(201,168,76,.07)}
+.tl-row:last-child{border:none}
+.tl-year{font-family:'Playfair Display',serif;font-size:1rem;color:var(--or);min-width:44px;font-weight:400;line-height:1.4}
+.tl-text{font-size:.72rem;line-height:1.8;color:var(--gris-clair);font-weight:300}
+.story-stats{display:grid;grid-template-columns:1fr 1fr;gap:2.5rem;margin-top:3rem;padding-top:3rem;border-top:1px solid rgba(201,168,76,.15)}
+.stat-val{font-family:'Playfair Display',serif;font-size:3rem;font-weight:400;color:var(--or);line-height:1;display:block}
+.stat-key{font-size:.6rem;letter-spacing:.25em;text-transform:uppercase;color:var(--gris);margin-top:.4rem;display:block;font-weight:400}
+
+/* ─── PRODUITS ─── */
+.produits{background:var(--vert-fonce)}
+.produits-hdr{max-width:640px;margin-bottom:5rem}
+.pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(201,168,76,.08)}
+.pcard{background:var(--vert-mid);padding:3.5rem 3rem;position:relative;overflow:hidden;cursor:none;transition:background .4s}
+.pcard:hover{background:var(--vert-light)}
+.pcard::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(to right,var(--rouge),var(--or));transform:scaleX(0);transform-origin:left;transition:transform .5s}
+.pcard:hover::after{transform:scaleX(1)}
+.pcard-num{font-family:'Playfair Display',serif;font-size:6rem;font-weight:700;color:rgba(201,168,76,.04);position:absolute;top:-.5rem;right:.8rem;line-height:1;pointer-events:none}
+.pcard-icon{margin-bottom:2rem}
+.pcard-icon svg{stroke:var(--or);fill:none;stroke-width:.7;opacity:.8}
+.pcard-sep{width:28px;height:1px;background:var(--rouge);margin-bottom:1.6rem}
+.pcard-name{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:400;line-height:1.25;margin-bottom:.5rem}
+.pcard-gr{font-size:.58rem;letter-spacing:.3em;text-transform:uppercase;color:var(--or);margin-bottom:1.1rem;display:block;font-weight:500}
+.pcard-desc{font-size:.78rem;line-height:1.85;color:var(--gris-clair);font-weight:300}
+.pcard-tag{display:inline-block;margin-top:1.6rem;font-size:.55rem;letter-spacing:.25em;text-transform:uppercase;color:var(--or);border:1px solid rgba(201,168,76,.25);padding:.3rem .9rem;font-weight:400}
+/* grid 5 éléments : 3 + 2 centré */
+.pgrid .pcard:nth-child(4){margin-left:50%}
+.pgrid .pcard:nth-child(5){margin-left:0}
+
+/* ─── CERTIFICATION ─── */
+.certification{background:var(--vert-mid);padding:8rem 5rem}
+.cert-hdr{text-align:center;max-width:660px;margin:0 auto 6rem}
+.cert-hdr .s-eyebrow{justify-content:center}
+.cert-hdr .s-eyebrow-line{display:none}
+.cert-layout{display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:start}
+.cert-steps{display:flex;flex-direction:column}
+.cstep{display:grid;grid-template-columns:52px 1fr;gap:1.8rem;padding:2.2rem 0;border-bottom:1px solid rgba(201,168,76,.08)}
+.cstep:last-child{border:none}
+.cstep-n{font-family:'Playfair Display',serif;font-size:2.4rem;font-weight:400;color:var(--rouge);opacity:.5;line-height:1;text-align:right}
+.cstep-title{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:400;margin-bottom:.5rem;color:var(--blanc)}
+.cstep-txt{font-size:.78rem;line-height:1.9;color:var(--gris-clair);font-weight:300}
+.cert-right{display:flex;flex-direction:column;gap:1px;background:rgba(201,168,76,.08)}
+.cert-deco{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(201,168,76,.08)}
+.cert-deco-cell{background:var(--vert-fonce);padding:3rem 2rem;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:.8rem;min-height:190px;transition:background .3s}
+.cert-deco-cell:hover{background:var(--vert-light)}
+.cert-deco-n{font-family:'Playfair Display',serif;font-size:3.5rem;font-weight:400;color:rgba(201,168,76,.15);line-height:1}
+.cert-deco-lbl{font-size:.58rem;letter-spacing:.28em;text-transform:uppercase;color:var(--or);font-weight:500}
+.cert-badges{background:var(--vert-fonce);padding:1.8rem 2.5rem;display:flex;align-items:center;justify-content:center}
+.cbadge{text-align:center;padding:0 3rem}
+.cbadge+.cbadge{border-left:1px solid rgba(201,168,76,.12)}
+.cbadge-val{font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--or);font-weight:400;line-height:1}
+.cbadge-key{font-size:.52rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gris);display:block;margin-top:.3rem;line-height:1.6;font-weight:400}
+
+/* ─── RECETTES ─── */
+.recettes{background:var(--vert-fonce)}
+.recettes-hdr{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:5rem}
+.rgrid{display:grid;grid-template-columns:1.45fr 1fr 1fr;gap:1px;background:rgba(201,168,76,.07)}
+.rcard{background:var(--vert-mid);display:flex;flex-direction:column;overflow:hidden;cursor:none;transition:background .35s}
+.rcard:hover{background:var(--vert-light)}
+.rcard-img{overflow:hidden;position:relative;height:270px;flex-shrink:0}
+.rcard.featured .rcard-img{height:360px}
+.rcard-img img{width:100%;height:100%;object-fit:cover;filter:brightness(.65) saturate(.75);transition:all .6s}
+.rcard:hover .rcard-img img{filter:brightness(.85) saturate(1);transform:scale(1.05)}
+.rcard-img-ov{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 45%,var(--vert-mid) 100%)}
+.rcard-body{padding:2.2rem 2.8rem 3.5rem;flex:1}
+.rcard.featured .rcard-body{padding:2.8rem 3.2rem 4rem}
+.rniv{font-size:.56rem;letter-spacing:.38em;text-transform:uppercase;color:var(--or);margin-bottom:1.4rem;display:flex;align-items:center;gap:.9rem;font-weight:500}
+.rniv::before{content:'';display:block;width:18px;height:1px;background:var(--rouge)}
+.rname{font-family:'Playfair Display',serif;font-size:1.7rem;font-weight:400;line-height:1.22;margin-bottom:1rem}
+.rcard.featured .rname{font-size:2.2rem}
+.rdesc{font-size:.78rem;line-height:1.9;color:var(--gris-clair);margin-bottom:1.8rem;font-weight:300}
+.rmeta{display:flex;gap:2.5rem;padding-top:1.4rem;border-top:1px solid rgba(201,168,76,.1)}
+.rmeta-val{font-family:'Playfair Display',serif;font-size:1.25rem;color:var(--or);display:block;font-weight:400}
+.rmeta-key{font-size:.54rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gris);font-weight:400}
+.ringr{margin-top:1.8rem;display:flex;flex-direction:column}
+.ringr li{list-style:none;font-size:.78rem;color:var(--gris-clair);display:flex;align-items:center;gap:.9rem;padding:.5rem 0;border-bottom:1px solid rgba(255,255,255,.04);font-weight:300}
+.ringr li::before{content:'';display:block;width:4px;height:4px;background:var(--rouge);border-radius:50%;flex-shrink:0}
+
+/* ─── VALEURS ─── */
+.valeurs{background:var(--vert-mid);text-align:center;padding:8rem 5rem}
+.valeurs-hdr{margin-bottom:5rem}
+.valeurs-hdr .s-eyebrow{justify-content:center}
+.valeurs-hdr .s-eyebrow-line{display:none}
+.vgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(201,168,76,.07);max-width:1200px;margin:0 auto}
+.vitem{background:var(--vert-mid);padding:3.5rem 2.2rem;transition:background .35s}
+.vitem:hover{background:var(--vert-light)}
+.vicon{width:44px;height:44px;margin:0 auto 1.8rem;border:1px solid rgba(168,39,42,.35);display:flex;align-items:center;justify-content:center}
+.vicon svg{width:18px;height:18px;stroke:var(--rouge);fill:none;stroke-width:1.2}
+.vtitle{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:400;margin-bottom:.9rem;color:var(--blanc)}
+.vtxt{font-size:.75rem;line-height:1.9;color:var(--gris-clair);font-weight:300}
+
+/* ─── CTA ─── */
+.cta{background:var(--vert-fonce);text-align:center;padding:9rem 5rem;position:relative;overflow:hidden}
+.cta-glow{position:absolute;inset:0;background:radial-gradient(ellipse 60% 70% at 50% 50%,rgba(168,39,42,.06) 0%,transparent 70%)}
+.cta-or-line{width:60px;height:1px;background:var(--or);margin:0 auto 2rem}
+.cta h2{position:relative;z-index:2;font-size:clamp(2.8rem,5.5vw,5rem);max-width:750px;margin:0 auto 2rem}
+.cta p{position:relative;z-index:2;font-size:.85rem;color:var(--gris-clair);max-width:420px;margin:0 auto 3.5rem;line-height:2;font-weight:300}
+.cta .btn-or{position:relative;z-index:2;font-size:.68rem;padding:1.3rem 3.5rem}
+
+/* ─── FOOTER ─── */
+footer{background:var(--vert-fonce);border-top:1px solid rgba(201,168,76,.12);padding:3.5rem 5rem;display:flex;align-items:center;justify-content:space-between}
+.flogo{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:500;color:var(--or);letter-spacing:.18em}
+.fmention{font-size:.62rem;color:var(--gris);line-height:1.8;font-weight:300}
+.fcert{font-size:.58rem;letter-spacing:.25em;text-transform:uppercase;color:var(--or);border:1px solid rgba(201,168,76,.25);padding:.5rem 1.2rem;font-weight:400}
+
+/* ─── ANIMATIONS ─── */
+@keyframes fadeSlideUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes lineDown{0%{opacity:1;transform:scaleY(1);transform-origin:top}50%{opacity:1}100%{opacity:0;transform:scaleY(1);transform-origin:bottom}}
+@keyframes scroll-x{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .8s ease,transform .8s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}.d4{transition-delay:.4s}.d5{transition-delay:.5s}
+</style>
+</head>
+<body>
+
+<!-- CURSEUR -->
+<div class="cursor" id="cur"></div>
+<div class="cursor-ring" id="ring"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="nav-logo">Al Fawal<span>Gastronomie Halal</span></a>
+  <ul class="nav-links">
+    <li><a href="#story">Histoire</a></li>
+    <li><a href="#produits">Produits</a></li>
+    <li><a href="#certification">Certification</a></li>
+    <li><a href="#recettes">Recettes</a></li>
+  </ul>
+  <a href="#produits" class="nav-cta">Découvrir</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-bg">
+    <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1920&q=85" alt="Table gastronomique">
+  </div>
+  <div class="hero-content">
+    <div class="hero-overline">
+      <div class="hero-overline-line"></div>
+      <span>Foie Gras Halal Premium — Grand Est</span>
+    </div>
+    <h1>L'excellence<br>gastronomique,<br><em>enfin halal.</em></h1>
+    <p class="hero-desc">Al Fawal est la première gamme de foie gras halal gastronomique, née du savoir-faire d'une Maison alsacienne fondée en 1811. Certifiée HQC, produite dans le Gers, pour une table de fête qui ne fait aucun compromis.</p>
+    <div class="hero-actions">
+      <a href="#produits" class="btn-or">Découvrir la gamme</a>
+      <a href="#story" class="btn-txt">Notre histoire</a>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <span>Défiler</span>
+    <div class="hero-scroll-line"></div>
+  </div>
+</section>
+
+<!-- BANDEAU -->
+<div class="bandeau">
+  <div class="bandeau-inner">
+    <div class="bandeau-item"><div class="bandeau-dot"></div>Certifié HQC — Niveau européen</div>
+    <div class="bandeau-item"><div class="bandeau-dot"></div>Élevage de canards dans le Gers</div>
+    <div class="bandeau-item"><div class="bandeau-dot"></div>Savoir-faire depuis 1811</div>
+    <div class="bandeau-item"><div class="bandeau-dot"></div>Disponible en GMS Grand Est</div>
+    <div class="bandeau-item"><div class="bandeau-dot"></div>Certifié HQC — Niveau européen</div>
+    <div class="bandeau-item"><div class="bandeau-dot"></div>Élevage de canards dans le Gers</div>
+    <div class="bandeau-item"><div class="bandeau-dot"></div>Savoir-faire depuis 1811</div>
+    <div class="bandeau-item"><div class="bandeau-dot"></div>Disponible en GMS Grand Est</div>
+  </div>
+</div>
+
+<!-- HISTOIRE -->
+<section class="story" id="story">
+  <div class="story-left">
+    <div class="s-eyebrow reveal"><div class="s-eyebrow-line"></div><span>L'histoire</span></div>
+    <h2 class="reveal d1">Un héritage de<br><em>deux siècles</em><br>au service du halal.</h2>
+    <p class="txt reveal d2" style="margin-bottom:1.6rem">Tout commence en 1811, à Strasbourg. La Maison alsacienne perfectionne ses recettes de foie gras et conquiert les plus grandes cours d'Europe. Fournisseur officiel de l'Empereur Napoléon III, elle devient une référence absolue de la gastronomie française.</p>
+    <p class="txt reveal d3">Deux siècles plus tard, naît Al Fawal — une gamme entièrement dédiée aux consommateurs halal qui n'avaient jamais eu accès à un foie gras gastronomique digne de ce nom. Même exigence. Même recette. Certifiée halal.</p>
+    <div class="story-stats reveal d4">
+      <div><span class="stat-val">1811</span><span class="stat-key">Fondation de la Maison</span></div>
+      <div><span class="stat-val">HQC</span><span class="stat-key">Certification européenne</span></div>
+      <div><span class="stat-val">Gers</span><span class="stat-key">Élevage certifié halal</span></div>
+      <div><span class="stat-val">5</span><span class="stat-key">Références disponibles</span></div>
+    </div>
+  </div>
+  <div class="story-right">
+    <div class="story-grid-bg"></div>
+    <div class="story-emblem">
+      <span class="story-year-bg">1811</span>
+      <div class="story-circle">
+        <span class="story-circle-name">AL FAWAL</span>
+        <span class="story-circle-sub">Gastronomie<br>Halal Premium</span>
+      </div>
+      <div class="story-tl">
+        <div class="tl-row"><span class="tl-year">1811</span><span class="tl-text">Frédéric Feyel fonde la Maison à Strasbourg</span></div>
+        <div class="tl-row"><span class="tl-year">1852</span><span class="tl-text">Fournisseur officiel de l'Empereur Napoléon III</span></div>
+        <div class="tl-row"><span class="tl-year">2024</span><span class="tl-text">Naissance de la gamme Al Fawal — foie gras halal gastronomique</span></div>
+        <div class="tl-row"><span class="tl-year">2025</span><span class="tl-text">Premier lancement commercial en GMS — Noël 2025</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUITS -->
+<section class="produits" id="produits">
+  <div class="produits-hdr">
+    <div class="s-eyebrow reveal"><div class="s-eyebrow-line"></div><span>La gamme</span></div>
+    <h2 class="reveal d1">Des produits pensés<br>pour <em>chaque occasion.</em></h2>
+    <p class="txt reveal d2">Cinq références, du format individuel au grand format professionnel. Chaque produit est élaboré avec un assaisonnement complexe qui le distingue de tous les foies gras halal du marché.</p>
+  </div>
+  <div class="pgrid">
+
+    <div class="pcard reveal">
+      <span class="pcard-num">01</span>
+      <div class="pcard-icon">
+        <svg width="46" height="54" viewBox="0 0 46 54"><rect x="6" y="6" width="34" height="42" rx="5"/><rect x="11" y="1" width="24" height="10" rx="3"/><line x1="12" y1="26" x2="34" y2="26"/><line x1="12" y1="33" x2="34" y2="33" stroke-opacity=".5"/></svg>
+      </div>
+      <div class="pcard-sep"></div>
+      <div class="pcard-name">Bloc de Foie Gras<br>de Canard</div>
+      <span class="pcard-gr">1 kg — Format traiteur</span>
+      <p class="pcard-desc">Le grand format Al Fawal. Pour événements, réceptions et services traiteur halal. Traçabilité complète, certification HQC.</p>
+      <span class="pcard-tag">Traiteur — Export</span>
+    </div>
+
+    <div class="pcard reveal d1">
+      <span class="pcard-num">02</span>
+      <div class="pcard-icon">
+        <svg width="52" height="44" viewBox="0 0 52 44"><rect x="2" y="8" width="48" height="30" rx="5"/><rect x="8" y="2" width="36" height="12" rx="3"/><line x1="10" y1="24" x2="42" y2="24"/><line x1="10" y1="30" x2="42" y2="30" stroke-opacity=".5"/></svg>
+      </div>
+      <div class="pcard-sep"></div>
+      <div class="pcard-name">Bloc de Foie Gras<br>de Canard 30% morceaux</div>
+      <span class="pcard-gr">500 g — Format professionnel</span>
+      <p class="pcard-desc">Un bloc généreux avec 30 % de morceaux pour une texture plus gourmande. Idéal pour la restauration halal.</p>
+      <span class="pcard-tag">RHF — Restauration</span>
+    </div>
+
+    <div class="pcard reveal d2">
+      <span class="pcard-num">03</span>
+      <div class="pcard-icon">
+        <svg width="46" height="54" viewBox="0 0 46 54"><ellipse cx="23" cy="34" rx="17" ry="15"/><path d="M13 22 Q23 8 33 22" fill="none"/><rect x="17" y="3" width="12" height="10" rx="2"/></svg>
+      </div>
+      <div class="pcard-sep"></div>
+      <div class="pcard-name">Foie Gras de Canard<br>Entier</div>
+      <span class="pcard-gr">180 g — Format premium</span>
+      <p class="pcard-desc">Le nec plus ultra de la gamme. Foie gras entier en bocal, recette signature, pour les grandes occasions et tables d'exception.</p>
+      <span class="pcard-tag">Haut de gamme — GMS</span>
+    </div>
+
+    <div class="pcard reveal d3">
+      <span class="pcard-num">04</span>
+      <div class="pcard-icon">
+        <svg width="46" height="54" viewBox="0 0 46 54"><rect x="6" y="6" width="34" height="42" rx="5"/><rect x="11" y="1" width="24" height="10" rx="3"/><line x1="12" y1="22" x2="34" y2="22"/><line x1="12" y1="29" x2="34" y2="29"/><line x1="12" y1="36" x2="34" y2="36" stroke-opacity=".4"/></svg>
+      </div>
+      <div class="pcard-sep"></div>
+      <div class="pcard-name">Bloc de Foie Gras<br>de Canard</div>
+      <span class="pcard-gr">150 g — Format individuel</span>
+      <p class="pcard-desc">Le format idéal pour une dégustation ou un dîner à deux. Texture fondante, assaisonnement aux épices signature d'Al Fawal.</p>
+      <span class="pcard-tag">GMS — Format couple</span>
+    </div>
+
+    <div class="pcard reveal d4">
+      <span class="pcard-num">05</span>
+      <div class="pcard-icon">
+        <svg width="52" height="44" viewBox="0 0 52 44"><rect x="2" y="10" width="48" height="28" rx="4"/><rect x="8" y="3" width="36" height="14" rx="3"/><line x1="10" y1="26" x2="42" y2="26"/></svg>
+      </div>
+      <div class="pcard-sep"></div>
+      <div class="pcard-name">Terrine de Canard<br>aux Olives</div>
+      <span class="pcard-gr">180 g — Recette originale</span>
+      <p class="pcard-desc">L'originalité de la gamme. Une terrine aux olives pour surprendre vos convives avec une recette méditerranéenne raffinée.</p>
+      <span class="pcard-tag">Nouveauté — GMS</span>
+    </div>
+
+  </div>
+</section>
+
+<!-- CERTIFICATION -->
+<section class="certification" id="certification">
+  <div class="cert-hdr reveal">
+    <div class="s-eyebrow"><div class="s-eyebrow-line"></div><span>Certification</span></div>
+    <h2>Comment nous garantissons<br><em>la conformité halal.</em></h2>
+    <p class="txt" style="margin:0 auto;text-align:center">Al Fawal est certifiée HQC — Halal Quality Control — accrédité au niveau européen et international. Voici les étapes concrètes qui garantissent que chaque produit respecte scrupuleusement la loi islamique.</p>
+  </div>
+  <div class="cert-layout">
+    <div class="cert-steps">
+      <div class="cstep reveal">
+        <div class="cstep-n">01</div>
+        <div><div class="cstep-title">Sélection des élevages</div><p class="cstep-txt">Chaque élevage partenaire est audité et certifié halal avant toute collaboration. Les canards sont élevés en plein air dans le Gers selon des conditions strictement validées par l'organisme HQC.</p></div>
+      </div>
+      <div class="cstep reveal d1">
+        <div class="cstep-n">02</div>
+        <div><div class="cstep-title">Abattage rituel manuel</div><p class="cstep-txt">L'abattage est réalisé manuellement par un sacrificateur musulman agréé, en prononçant la Basmala. Conformément aux exigences les plus strictes de la certification halal, sans étourdissement préalable.</p></div>
+      </div>
+      <div class="cstep reveal d2">
+        <div class="cstep-n">03</div>
+        <div><div class="cstep-title">Chaîne de production dédiée</div><p class="cstep-txt">La production Al Fawal est réalisée sur une ligne entièrement séparée, sans aucun contact avec des produits non-halal. Les équipements sont validés avant chaque production par un contrôleur HQC sur site.</p></div>
+      </div>
+      <div class="cstep reveal d3">
+        <div class="cstep-n">04</div>
+        <div><div class="cstep-title">Traçabilité & QR code</div><p class="cstep-txt">Chaque produit porte un QR code permettant de remonter jusqu'à l'élevage, la date d'abattage et le numéro de sacrificateur. La transparence totale, accessible en un scan depuis votre smartphone.</p></div>
+      </div>
+    </div>
+    <div class="cert-right">
+      <div class="cert-deco">
+        <div class="cert-deco-cell reveal"><div class="cert-deco-n">01</div><div class="cert-deco-lbl">Élevage certifié — Gers</div></div>
+        <div class="cert-deco-cell reveal d1"><div class="cert-deco-n">02</div><div class="cert-deco-lbl">Abattage rituel</div></div>
+        <div class="cert-deco-cell reveal d2"><div class="cert-deco-n">03</div><div class="cert-deco-lbl">Production dédiée</div></div>
+        <div class="cert-deco-cell reveal d3"><div class="cert-deco-n">04</div><div class="cert-deco-lbl">Traçabilité QR code</div></div>
+      </div>
+      <div class="cert-badges">
+        <div class="cbadge"><div class="cbadge-val">HQC</div><span class="cbadge-key">Certification halal<br>niveau européen</span></div>
+        <div class="cbadge"><div class="cbadge-val">IFS</div><span class="cbadge-key">Sécurité alimentaire<br>score 96,64/100</span></div>
+        <div class="cbadge"><div class="cbadge-val">IGP</div><span class="cbadge-key">Indication géographique<br>protégée</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RECETTES -->
+<section class="recettes" id="recettes">
+  <div class="recettes-hdr">
+    <div>
+      <div class="s-eyebrow reveal"><div class="s-eyebrow-line"></div><span>Les recettes</span></div>
+      <h2 class="reveal d1">Cuisinez<br><em>l'exception.</em></h2>
+    </div>
+    <p class="txt reveal" style="max-width:320px">Trois idées pour sublimer Al Fawal à votre table, des fêtes à l'Aïd, du repas gastronomique au quotidien.</p>
+  </div>
+  <div class="rgrid">
+
+    <div class="rcard featured reveal">
+      <div class="rcard-img">
+        <img src="https://images.unsplash.com/photo-1482049016688-2d3e1b311543?w=900&q=85" alt="Toast foie gras">
+        <div class="rcard-img-ov"></div>
+      </div>
+      <div class="rcard-body">
+        <div class="rniv">Recette signature</div>
+        <div class="rname">Toast Al Fawal au Pain d'Épices & Confit d'Oignon Rouge</div>
+        <p class="rdesc">La recette classique sublimée. Le pain d'épices alsacien révèle toute la complexité d'Al Fawal. Un mariage parfait pour la table de l'Aïd ou de Noël.</p>
+        <div class="rmeta">
+          <div><span class="rmeta-val">10'</span><span class="rmeta-key">Préparation</span></div>
+          <div><span class="rmeta-val">4</span><span class="rmeta-key">Personnes</span></div>
+          <div><span class="rmeta-val">Facile</span><span class="rmeta-key">Niveau</span></div>
+        </div>
+        <ul class="ringr">
+          <li>1 produit Al Fawal 180 g</li>
+          <li>8 tranches de pain d'épices</li>
+          <li>2 oignons rouges confits maison</li>
+          <li>Fleur de sel, poivre du moulin</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="rcard reveal d1">
+      <div class="rcard-img">
+        <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600&q=85" alt="Plat gastronomique foie gras">
+        <div class="rcard-img-ov"></div>
+      </div>
+      <div class="rcard-body">
+        <div class="rniv">Fêtes de l'Aïd</div>
+        <div class="rname">Velouté de Butternut au Foie Gras Al Fawal</div>
+        <p class="rdesc">Une entrée chaude et raffinée pour un grand repas festif. La douceur du butternut contraste avec l'intensité du foie gras.</p>
+        <div class="rmeta">
+          <div><span class="rmeta-val">25'</span><span class="rmeta-key">Préparation</span></div>
+          <div><span class="rmeta-val">6</span><span class="rmeta-key">Personnes</span></div>
+        </div>
+        <ul class="ringr">
+          <li>1 produit Al Fawal 130 g</li>
+          <li>1 butternut rôti</li>
+          <li>Crème de coco, bouillon halal</li>
+          <li>Noisettes torréfiées</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="rcard reveal d2">
+      <div class="rcard-img">
+        <img src="https://images.unsplash.com/photo-1577219491135-ce391730fb2c?w=600&q=85" alt="Chef en cuisine gastronomique">
+        <div class="rcard-img-ov"></div>
+      </div>
+      <div class="rcard-body">
+        <div class="rniv">Table de Noël Halal</div>
+        <div class="rname">Millefeuille Al Fawal & Figues Rôties au Miel</div>
+        <p class="rdesc">Une présentation gastronomique pour impressionner. La figue rôtie au miel apporte une douceur caramélisée irrésistible.</p>
+        <div class="rmeta">
+          <div><span class="rmeta-val">20'</span><span class="rmeta-key">Préparation</span></div>
+          <div><span class="rmeta-val">4</span><span class="rmeta-key">Personnes</span></div>
+        </div>
+        <ul class="ringr">
+          <li>1 produit Al Fawal 180 g</li>
+          <li>6 figues fraîches au miel</li>
+          <li>Pâte feuilletée halal</li>
+          <li>Réduction de balsamique</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- VALEURS -->
+<section class="valeurs" id="valeurs">
+  <div class="valeurs-hdr">
+    <div class="s-eyebrow reveal"><div class="s-eyebrow-line"></div><span>Nos engagements</span></div>
+    <h2 class="reveal d1">Ce qui nous<br><em>distingue.</em></h2>
+  </div>
+  <div class="vgrid">
+    <div class="vitem reveal"><div class="vicon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div class="vtitle">Certification HQC</div><p class="vtxt">L'organisme halal le plus rigoureux, accrédité au niveau européen et international. Aucun compromis sur la conformité.</p></div>
+    <div class="vitem reveal d1"><div class="vicon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg></div><div class="vtitle">Savoir-faire depuis 1811</div><p class="vtxt">Deux siècles de recettes transmises de génération en génération. Le même soin apporté à chaque produit Al Fawal.</p></div>
+    <div class="vitem reveal d2"><div class="vicon"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div><div class="vtitle">Élevage dans le Gers</div><p class="vtxt">Canards élevés en plein air dans le Gers, fermes certifiées halal, traçabilité totale du premier au dernier maillon.</p></div>
+    <div class="vitem reveal d3"><div class="vicon"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><div class="vtitle">Qualité premium</div><p class="vtxt">Assaisonnement complexe aux épices. Al Fawal ne ressemble à aucun autre foie gras halal disponible sur le marché.</p></div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+  <div class="cta-glow"></div>
+  <div class="cta-or-line reveal"></div>
+  <div class="s-eyebrow reveal d1" style="justify-content:center"><span style="font-size:.6rem;letter-spacing:.5em;text-transform:uppercase;color:var(--or)">Disponible en GMS Grand Est</span></div>
+  <h2 class="reveal d2">La table de fête<br>que vous <em>méritez.</em></h2>
+  <p class="reveal d3">Al Fawal est disponible dans les hypermarchés Carrefour et Leclerc du Grand Est.</p>
+  <a href="#produits" class="btn-or reveal d4">Découvrir la gamme</a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="flogo">Al Fawal</div>
+  <div class="fmention">© 2026 Al Fawal — Gastronomie Halal<br>Une création de la Maison Frédéric Feyel, Schiltigheim — Fondée en 1811</div>
+  <div class="fcert">Certifié HQC — Halal Quality Control</div>
+</footer>
+
+<script>
+// CURSEUR
+const cur = document.getElementById('cur');
+const ring = document.getElementById('ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px'});
+function animRing(){rx+=(mx-rx)*.14;ry+=(my-ry)*.14;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(animRing)}
+animRing();
+document.querySelectorAll('a,button,.pcard,.rcard,.vitem,.cert-deco-cell').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cur.classList.add('grow');ring.classList.add('grow')});
+  el.addEventListener('mouseleave',()=>{cur.classList.remove('grow');ring.classList.remove('grow')});
+});
+
+// NAV SCROLL
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>{nav.classList.toggle('scrolled',window.scrollY>80)});
+
+// SCROLL REVEAL
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')});
+},{threshold:.1,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+// SMOOTH LINKS
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',function(e){
+    e.preventDefault();
+    const t=document.querySelector(this.getAttribute('href'));
+    if(t)t.scrollIntoView({behavior:'smooth',block:'start'});
+  });
+});
+</script>
+</body>
+</html>
